@@ -14,9 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -24,17 +21,13 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build backend image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-backend:latest docker/backend
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-backend:latest docker/backend
 
       - name: Build frontend image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-frontend:latest docker/frontend
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-frontend:latest docker/frontend
 
       - name: Push backend image
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-backend:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-backend:latest
 
       - name: Push frontend image
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-frontend:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-frontend:latest
