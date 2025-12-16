@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: dhakacart
+  labels:
+    app: dhakacart-frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: dhakacart-frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    name: http
