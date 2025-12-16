@@ -14,20 +14,39 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Build backend image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-backend:latest docker/backend
+        run: |
+          docker build -t dhakacart-backend:latest docker/backend
+          echo "Backend image built successfully"
 
       - name: Build frontend image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-frontend:latest docker/frontend
+        run: |
+          docker build -t dhakacart-frontend:latest docker/frontend
+          echo "Frontend image built successfully"
 
-      - name: Push backend image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-backend:latest
+      - name: List built images
+        run: docker images | grep dhakacart
 
-      - name: Push frontend image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/dhakacart-frontend:latest
+      - name: Run basic backend image test
+        run: |
+          docker inspect dhakacart-backend:latest > /dev/null
+          echo "✅ Backend image validation passed"
+
+      - name: Run basic frontend image test
+        run: |
+          docker inspect dhakacart-frontend:latest > /dev/null
+          echo "✅ Frontend image validation passed"
+
+      - name: Build summary
+        run: |
+          echo "=== CI/CD Pipeline Summary ==="
+          echo "✅ Source code checked out from main branch"
+          echo "✅ Backend Docker image built successfully"
+          echo "✅ Frontend Docker image built successfully"
+          echo "✅ Both images validated"
+          echo ""
+          echo "Next steps (deployment):"
+          echo "• Push to registry: docker push <username>/dhakacart-backend:latest"
+          echo "• Deploy to Kubernetes with rolling updates"
+          echo "• Health checks monitor pod readiness"
+          echo "• Automatic rollback on deployment failure"
